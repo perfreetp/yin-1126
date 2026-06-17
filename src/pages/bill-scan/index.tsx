@@ -110,6 +110,7 @@ const BillScanPage: React.FC = () => {
   const typeOptions = Object.entries(BILL_TYPE_LABEL) as [BillType, string][];
 
   return (
+    <>
     <ScrollView scrollY className={styles.page}>
       <View className={styles.scanArea}>
         <Text className={styles.scanTitle}>扫码快速录入</Text>
@@ -228,6 +229,18 @@ const BillScanPage: React.FC = () => {
         </View>
       </View>
     </ScrollView>
+
+    <View className={styles.bottomBar}>
+      <View className={styles.cancelBtn} onClick={() => Taro.navigateBack()}>
+        <Text>取消</Text>
+      </View>
+      <View
+        className={classnames(styles.submitBtn, !canSubmit && styles.disabled)}
+        onClick={handleSubmit}
+      >
+        <Text>保存票据</Text>
+      </View>
+    </View>
   );
 };
 

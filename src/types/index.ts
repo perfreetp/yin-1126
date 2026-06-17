@@ -146,5 +146,5 @@ export const TODO_TYPE_LABEL: Record<TodoType, string> = {
   boss_approval: '待审批',
   sign_confirm: '待签收',
   overdue_urge: '逾期催办',
-  matured_remind: '到期提醒'
+  mature_remind: '到期提醒'
 };
