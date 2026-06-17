@@ -275,3 +275,204 @@
   background: linear-gradient(135deg, #FF6B6B 0%, $color-error 100%);
   box-shadow: 0 4rpx 16rpx rgba($color-error, 0.3);
 }
+
+/* ========= 流转凭证弹窗 ========= */
+.voucherOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.voucherSheet {
+  width: 100%;
+  max-width: 750rpx;
+  height: 88vh;
+  background: $color-bg-page;
+  border-radius: $radius-lg $radius-lg 0 0;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.voucherHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $page-padding;
+  background: $color-bg-card;
+  border-bottom: 1rpx solid $color-border;
+
+  .voucherTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  .voucherClose {
+    width: 56rpx;
+    height: 56rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-text-tertiary;
+    font-size: $font-size-lg;
+  }
+}
+
+.voucherScroll {
+  flex: 1;
+  padding: $spacing-md;
+}
+
+.voucherPaper {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFF 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg $spacing-md;
+  box-shadow: 0 4rpx 24rpx rgba(22, 119, 255, 0.08);
+  border: 2rpx solid rgba(22, 119, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.voucherBadge {
+  text-align: center;
+  color: $color-primary;
+  font-size: $font-size-xs;
+  letter-spacing: 6rpx;
+  padding: $spacing-xs 0;
+  border-bottom: 2rpx dashed rgba(22, 119, 255, 0.2);
+  margin-bottom: $spacing-md;
+  font-weight: $font-weight-medium;
+}
+
+.voucherNo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-lg;
+
+  .voucherNoValue {
+    font-family: 'Courier New', monospace;
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-md;
+  }
+}
+
+.voucherAmount {
+  text-align: center;
+  padding: $spacing-md 0;
+  background: linear-gradient(135deg, rgba(22, 119, 255, 0.08) 0%, rgba(22, 119, 255, 0.03) 100%);
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-lg;
+
+  .voucherAmountLabel {
+    display: block;
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+    margin-bottom: $spacing-xs;
+  }
+
+  .voucherAmountValue {
+    display: block;
+    font-size: 64rpx;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    font-family: 'DIN Alternate', 'Helvetica Neue', sans-serif;
+    letter-spacing: -2rpx;
+  }
+}
+
+.voucherDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md 0;
+
+  .voucherDots {
+    flex: 1;
+    border-top: 2rpx dashed $color-divider;
+  }
+}
+
+.voucherSectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  padding-left: $spacing-sm;
+  border-left: 6rpx solid $color-primary;
+  line-height: 1;
+  margin-bottom: $spacing-md;
+}
+
+.voucherTable {
+  background: $color-bg-card;
+  border-radius: $radius-sm;
+  overflow: hidden;
+}
+
+.voucherRow {
+  display: flex;
+  padding: $spacing-sm $spacing-md;
+  border-bottom: 1rpx solid $color-divider;
+  line-height: 1.6;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .voucherK {
+    width: 200rpx;
+    flex-shrink: 0;
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+
+  .voucherV {
+    flex: 1;
+    font-size: $font-size-xs;
+    color: $color-text-primary;
+    text-align: right;
+    word-break: break-all;
+
+    &.statusText {
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+.voucherFooter {
+  margin-top: $spacing-xl;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $color-text-disabled;
+  line-height: 2;
+}
+
+.voucherActions {
+  display: flex;
+  gap: $spacing-md;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc($spacing-md + env(safe-area-inset-bottom));
+  background: $color-bg-card;
+  border-top: 1rpx solid $color-border;
+}

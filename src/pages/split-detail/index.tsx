@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import { useBillStore } from '@/store/useBillStore';
-import { SPLIT_STATUS_LABEL } from '@/types';
+import { SPLIT_STATUS_LABEL, PAYEE_CATEGORY_LABEL, BILL_TYPE_LABEL } from '@/types';
 import {
   formatAmount,
   formatDateTime,
@@ -24,6 +24,7 @@ const SplitDetailPage: React.FC = () => {
   const router = useRouter();
   const splitId = router.params.id as string;
   const { splitRecords, payees, bills, approveSplit, urgeSplit, signSplit, rejectSplit } = useBillStore();
+  const [showVoucher, setShowVoucher] = useState(false);
 
   const split = useMemo(() => splitRecords.find((s) => s.id === splitId), [splitId, splitRecords]);
   const payee = useMemo(() => payees.find((p) => p.id === split?.payeeId), [split, payees]);
@@ -121,20 +122,7 @@ const SplitDetailPage: React.FC = () => {
   const timeline = getTimeline();
 
   const handleVoucher = () => {
-    Taro.showModal({
-      title: '简版流转凭证',
-      content:
-        `凭证号：${split.voucherNo}\n` +
-        `票据号：${split.billNo}\n` +
-        `收款方：${split.payeeName}\n` +
-        `金  额：¥${formatAmount(split.amount)}\n` +
-        `用  途：${split.purpose}\n` +
-        `批  准：${split.approvedAt ? formatDateTime(split.approvedAt) : '待批准'}\n` +
-        `签  收：${split.signedAt ? formatDateTime(split.signedAt) : '待签收'}\n\n` +
-        '凭证已生成，可前往文件查看',
-      showCancel: false,
-      confirmText: '我知道了'
-    });
+    setShowVoucher(true);
   };
 
   const renderBottomBar = () => {
@@ -347,6 +335,184 @@ const SplitDetailPage: React.FC = () => {
       </View>
     </ScrollView>
     {renderBottomBar()}
+
+    {showVoucher && (
+      <View className={styles.voucherOverlay} onClick={() => setShowVoucher(false)}>
+        <View className={styles.voucherSheet} onClick={(e) => e.stopPropagation()}>
+          <View className={styles.voucherHeader}>
+            <Text className={styles.voucherTitle}>📄 票据流转凭证</Text>
+            <Text className={styles.voucherClose} onClick={() => setShowVoucher(false)}>✕</Text>
+          </View>
+
+          <ScrollView scrollY className={styles.voucherScroll}>
+            <View className={styles.voucherPaper}>
+              <View className={styles.voucherBadge}>供应链票据拆分明细</View>
+              <View className={styles.voucherNo}>
+                <Text>凭证号</Text>
+                <Text className={styles.voucherNoValue}>{split.voucherNo}</Text>
+              </View>
+
+              <View className={styles.voucherAmount}>
+                <Text className={styles.voucherAmountLabel}>拆分金额</Text>
+                <Text className={styles.voucherAmountValue}>¥ {formatAmount(split.amount)}</Text>
+              </View>
+
+              <View className={styles.voucherDivider}>
+                <View className={styles.voucherDots} />
+              </View>
+
+              <View className={styles.voucherSectionTitle}>票据信息</View>
+              <View className={styles.voucherTable}>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>票据类型</Text>
+                  <Text className={styles.voucherV}>{bill ? BILL_TYPE_LABEL[bill.type] : '-'}</Text>
+                </View>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>票据号码</Text>
+                  <Text className={styles.voucherV}>{split.billNo}</Text>
+                </View>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>出票方（核心企业）</Text>
+                  <Text className={styles.voucherV}>{bill?.issuer || '-'}</Text>
+                </View>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>票面金额</Text>
+                  <Text className={styles.voucherV}>¥ {bill ? formatAmount(bill.amount) : '-'}</Text>
+                </View>
+                {bill && (
+                  <View className={styles.voucherRow}>
+                    <Text className={styles.voucherK}>出票日期 / 到期日</Text>
+                    <Text className={styles.voucherV}>{bill.issueDate} 至 {bill.dueDate}</Text>
+                  </View>
+                )}
+              </View>
+
+              <View className={styles.voucherDivider}>
+                <View className={styles.voucherDots} />
+              </View>
+
+              <View className={styles.voucherSectionTitle}>收款方信息</View>
+              <View className={styles.voucherTable}>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>收款单位</Text>
+                  <Text className={styles.voucherV} style={{ fontWeight: '600' }}>{split.payeeName}</Text>
+                </View>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>类别</Text>
+                  <Text className={styles.voucherV}>
+                    {PAYEE_CATEGORY_LABEL[split.payeeCategory] || split.payeeCategory}
+                  </Text>
+                </View>
+                {payee && payee.bankAccount && (
+                  <View className={styles.voucherRow}>
+                    <Text className={styles.voucherK}>开户账户</Text>
+                    <Text className={styles.voucherV}>{maskBankAccount(payee.bankAccount)}</Text>
+                  </View>
+                )}
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>背书用途</Text>
+                  <Text className={styles.voucherV} style={{ color: '#1677FF' }}>{split.purpose}</Text>
+                </View>
+              </View>
+
+              <View className={styles.voucherDivider}>
+                <View className={styles.voucherDots} />
+              </View>
+
+              <View className={styles.voucherSectionTitle}>流转记录</View>
+              <View className={styles.voucherTable}>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>创建时间</Text>
+                  <Text className={styles.voucherV}>{formatDateTime(split.createdAt)}</Text>
+                </View>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>审批时间</Text>
+                  <Text className={styles.voucherV}>
+                    {split.approvedAt
+                      ? `${formatDateTime(split.approvedAt)}（${split.approvedBy || '老板'}）`
+                      : '— 等待审批 —'}
+                  </Text>
+                </View>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>签收时间</Text>
+                  <Text className={styles.voucherV}>
+                    {split.signedAt
+                      ? `${formatDateTime(split.signedAt)}（已完成）`
+                      : split.status === 'rejected'
+                        ? '— 已驳回 —'
+                        : '— 待对方签收 —'}
+                  </Text>
+                </View>
+                <View className={styles.voucherRow}>
+                  <Text className={styles.voucherK}>当前状态</Text>
+                  <Text
+                    className={classnames(styles.voucherV, styles.statusText)}
+                    style={{
+                      color:
+                        split.status === 'signed'
+                          ? '#00B96B'
+                          : split.status === 'overdue'
+                            ? '#F53F3F'
+                            : split.status === 'rejected'
+                              ? '#86909C'
+                              : split.status === 'pending_boss'
+                                ? '#FF7D00'
+                                : '#1677FF'
+                    }}
+                  >
+                    ● {SPLIT_STATUS_LABEL[split.status]}
+                  </Text>
+                </View>
+              </View>
+
+              {split.urgedCount > 0 && (
+                <>
+                  <View className={styles.voucherDivider}>
+                    <View className={styles.voucherDots} />
+                  </View>
+                  <View className={styles.voucherSectionTitle}>催办记录（共 {split.urgedCount} 次）</View>
+                  <View className={styles.voucherTable}>
+                    <View className={styles.voucherRow}>
+                      <Text className={styles.voucherK}>催办次数</Text>
+                      <Text className={styles.voucherV} style={{ color: '#FF7D00' }}>
+                        累计 {split.urgedCount} 次
+                      </Text>
+                    </View>
+                    <View className={styles.voucherRow}>
+                      <Text className={styles.voucherK}>最近催办时间</Text>
+                      <Text className={styles.voucherV}>
+                        {split.lastUrgedAt ? formatDateTime(split.lastUrgedAt) : '-'}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
+
+              <View className={styles.voucherFooter}>
+                <Text>· 本凭证由系统自动生成，可作为内部记账凭证 ·</Text>
+              </View>
+            </View>
+          </ScrollView>
+
+          <View className={styles.voucherActions}>
+            <View
+              className={styles.btnSecondary}
+              onClick={() => setShowVoucher(false)}
+            >
+              <Text>关闭</Text>
+            </View>
+            <View
+              className={styles.btnPrimary}
+              onClick={() =>
+                Taro.showToast({ title: '已保存到系统相册', icon: 'success' })
+              }
+            >
+              <Text>保存图片</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    )}
     </>
   );
 };

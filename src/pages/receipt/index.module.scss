@@ -126,9 +126,32 @@
     color: $color-text-white;
     font-weight: $font-weight-semibold;
   }
+}
 
-  &:active {
-    transform: scale(0.96);
+/* ============ 时间范围筛选 Tab ============ */
+.timeTabs {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.timeTab {
+  flex: 1;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  transition: all $transition-fast;
+
+  &.timeActive {
+    background: linear-gradient(135deg, rgba($color-primary, 0.15) 0%, rgba($color-primary, 0.08) 100%);
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+    border: 2rpx solid rgba($color-primary, 0.3);
   }
 }
 

@@ -103,7 +103,7 @@ const BillScanPage: React.FC = () => {
     });
     Taro.showToast({ title: '录入成功', icon: 'success' });
     setTimeout(() => {
-      Taro.navigateBack();
+      Taro.switchTab({ url: '/pages/bills/index' });
     }, 800);
   };
 

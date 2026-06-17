@@ -8,8 +8,10 @@ import SplitItem from '@/components/SplitItem';
 import EmptyState from '@/components/EmptyState';
 import { SplitStatus, PAYEE_CATEGORY_LABEL, PayeeCategory } from '@/types';
 import { formatAmountWan } from '@/utils/format';
+import dayjs from 'dayjs';
 
 type StatusFilter = 'all' | SplitStatus;
+type TimeFilter = 'all' | 'month' | 'week';
 
 const statusTabs: { key: StatusFilter; label: string }[] = [
   { key: 'all', label: '全部' },
@@ -20,10 +22,17 @@ const statusTabs: { key: StatusFilter; label: string }[] = [
   { key: 'rejected', label: '已驳回' }
 ];
 
+const timeTabs: { key: TimeFilter; label: string }[] = [
+  { key: 'all', label: '全部时间' },
+  { key: 'month', label: '本月' },
+  { key: 'week', label: '本周' }
+];
+
 const ReceiptPage: React.FC = () => {
   const { splitRecords, payees, signSplit, urgeSplit } = useBillStore();
 
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [selectedPayee, setSelectedPayee] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<PayeeCategory | null>(null);
 
@@ -33,22 +42,36 @@ const ReceiptPage: React.FC = () => {
       .reduce((sum, s) => sum + s.amount, 0);
     const pendingSign = splitRecords.filter((s) => s.status === 'pending_sign').length;
     const overdueCount = splitRecords.filter((s) => s.status === 'overdue').length;
+    const monthStartTs = dayjs().startOf('month').toDate().getTime();
     const monthSigned = splitRecords
-      .filter((s) => s.status === 'signed' && s.signedAt && s.signedAt.startsWith('2026-06'))
+      .filter(
+        (s) =>
+          s.status === 'signed' &&
+          s.signedAt &&
+          new Date(s.signedAt).getTime() >= monthStartTs
+      )
       .reduce((sum, s) => sum + s.amount, 0);
     return { totalSigned, pendingSign, overdueCount, monthSigned };
   }, [splitRecords]);
 
   const filteredRecords = useMemo(() => {
+    const now = dayjs();
+    const monthStart = now.startOf('month').toDate().getTime();
+    const weekStart = now.startOf('week').toDate().getTime();
+
     return splitRecords
       .filter((r) => {
         if (statusFilter !== 'all' && r.status !== statusFilter) return false;
         if (selectedPayee && r.payeeId !== selectedPayee) return false;
         if (selectedCategory && r.payeeCategory !== selectedCategory) return false;
+        const compareTimeStr = r.status === 'signed' && r.signedAt ? r.signedAt : r.createdAt;
+        const compareTs = new Date(compareTimeStr).getTime();
+        if (timeFilter === 'month' && compareTs < monthStart) return false;
+        if (timeFilter === 'week' && compareTs < weekStart) return false;
         return true;
       })
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }, [splitRecords, statusFilter, selectedPayee, selectedCategory]);
+  }, [splitRecords, statusFilter, timeFilter, selectedPayee, selectedCategory]);
 
   const handlePayeeFilter = () => {
     const payeeList = payees.map((p) => p.name);
@@ -95,6 +118,12 @@ const ReceiptPage: React.FC = () => {
     });
   };
 
+  const handleItemClick = (record) => {
+    Taro.navigateTo({
+      url: `/pages/split-detail/index?id=${record.id}`
+    });
+  };
+
   const selectedPayeeName = payees.find((p) => p.id === selectedPayee)?.name;
   const selectedCategoryName = selectedCategory ? PAYEE_CATEGORY_LABEL[selectedCategory] : null;
 
@@ -120,6 +149,18 @@ const ReceiptPage: React.FC = () => {
       </View>
 
       <View className={styles.filterBar}>
+        <View className={styles.timeTabs}>
+          {timeTabs.map((tab) => (
+            <View
+              key={tab.key}
+              className={classnames(styles.timeTab, timeFilter === tab.key && styles.timeActive)}
+              onClick={() => setTimeFilter(tab.key)}
+            >
+              <Text>{tab.label}</Text>
+            </View>
+          ))}
+        </View>
+
         <View className={styles.filterRow}>
           <View className={styles.filterSelect} onClick={handlePayeeFilter}>
             <Text className={selectedPayee ? styles.filterValue : styles.filterPlaceholder}>
@@ -157,6 +198,7 @@ const ReceiptPage: React.FC = () => {
                   key={record.id}
                   record={record}
                   showActions
+                  onClick={() => handleItemClick(record)}
                   onSign={() => handleConfirmReceipt(record.id)}
                   onUrge={() => {
                     urgeSplit(record.id);

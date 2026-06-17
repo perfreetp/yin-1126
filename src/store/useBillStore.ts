@@ -345,29 +345,45 @@ export const useBillStore = create<BillStoreState>((set, get) => {
       const split = state.splitRecords.find((s) => s.id === splitId);
       if (!split) return;
 
-      // 检查是否已逾期（超过批准后3天）
       const approvedAt = split.approvedAt ? dayjs(split.approvedAt) : dayjs(split.createdAt);
       const isOverdue = now.diff(approvedAt, 'day') >= 3;
+      const nextUrgeCount = split.urgedCount + 1;
 
-      set((state) => ({
-        splitRecords: state.splitRecords.map((s) =>
-          s.id === splitId
-            ? {
-                ...s,
-                urgedCount: s.urgedCount + 1,
-                lastUrgedAt: now.format('YYYY-MM-DD HH:mm:ss'),
-                status: isOverdue ? 'overdue' : s.status
-              }
-            : s
-        ),
-        todos: isOverdue
-          ? [
+      set((state) => {
+        // 查找已存在的相关待办
+        const existingTodoType = isOverdue ? 'overdue_urge' : 'sign_confirm';
+        const existingTodo = state.todos.find(
+          (t) => t.relatedId === splitId && t.type === existingTodoType && !t.isDone
+        );
+
+        let newTodos;
+
+        if (existingTodo) {
+          // 更新已存在的待办（持续更新次数和时间，不创建新的）
+          newTodos = state.todos.map((t) =>
+            t.id === existingTodo.id
+              ? {
+                  ...t,
+                  title: isOverdue
+                    ? `逾期未签：${split.payeeName} ${(split.amount / 10000).toFixed(0)}万元`
+                    : `待对方签收：${split.payeeName} ${(split.amount / 10000).toFixed(0)}万元`,
+                  description: `催办${nextUrgeCount}次，最近${now.format('MM-DD HH:mm')}已发送 - ${split.purpose}`,
+                  createdAt: t.createdAt,
+                  deadlineAt: now.add(isOverdue ? 1 : 3, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                  isDone: false
+                }
+              : t
+          );
+        } else {
+          // 没有现成就找一个，优先把sign_confirm标记完成，新增overdue_urge
+          if (isOverdue) {
+            newTodos = [
               {
                 id: generateId(),
                 type: 'overdue_urge',
                 relatedId: splitId,
                 title: `逾期未签：${split.payeeName} ${(split.amount / 10000).toFixed(0)}万元`,
-                description: `已发送${split.urgedCount + 1}天，催办${split.urgedCount + 1}次 - 建议电话联系`,
+                description: `催办${nextUrgeCount}次，最近${now.format('MM-DD HH:mm')}已发送 - 建议电话联系`,
                 amount: split.amount,
                 createdAt: now.format('YYYY-MM-DD HH:mm:ss'),
                 deadlineAt: now.add(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
@@ -379,11 +395,42 @@ export const useBillStore = create<BillStoreState>((set, get) => {
                   ? { ...t, isDone: true }
                   : t
               )
-            ]
-          : state.todos
-      }));
+            ];
+          } else {
+            newTodos = [
+              {
+                id: generateId(),
+                type: 'sign_confirm',
+                relatedId: splitId,
+                title: `待对方签收：${split.payeeName} ${(split.amount / 10000).toFixed(0)}万元`,
+                description: `催办${nextUrgeCount}次，最近${now.format('MM-DD HH:mm')}已发送 - ${split.purpose}`,
+                amount: split.amount,
+                createdAt: now.format('YYYY-MM-DD HH:mm:ss'),
+                deadlineAt: now.add(3, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                isDone: false,
+                priority: 'medium'
+              },
+              ...state.todos
+            ];
+          }
+        }
+
+        return {
+          splitRecords: state.splitRecords.map((s) =>
+            s.id === splitId
+              ? {
+                  ...s,
+                  urgedCount: nextUrgeCount,
+                  lastUrgedAt: now.format('YYYY-MM-DD HH:mm:ss'),
+                  status: isOverdue ? 'overdue' : s.status
+                }
+              : s
+          ),
+          todos: newTodos
+        };
+      });
       persist();
-      console.info('[Split] 发送催办:', splitId, '逾期:', isOverdue);
+      console.info('[Split] 发送催办:', splitId, '次数:', nextUrgeCount, '逾期:', isOverdue);
     },
 
     // 检查并更新逾期状态（页面进入时调用）
@@ -408,27 +455,46 @@ export const useBillStore = create<BillStoreState>((set, get) => {
           (s, i) => s.status === 'overdue' && state.splitRecords[i].status !== 'overdue'
         );
 
-        const newTodos = [...state.todos];
+        let newTodos = [...state.todos];
         overdueSplits.forEach((s) => {
-          // 把原来的 sign_confirm 标记完成
-          newTodos.forEach((t) => {
-            if (t.relatedId === s.id && t.type === 'sign_confirm' && !t.isDone) {
-              t.isDone = true;
+          // 先查找是否已有未完成的 sign_confirm，把它更新成 overdue_urge
+          const existingSignConfirm = newTodos.find(
+            (t) => t.relatedId === s.id && t.type === 'sign_confirm' && !t.isDone
+          );
+
+          if (existingSignConfirm) {
+            newTodos = newTodos.map((t) =>
+              t.id === existingSignConfirm.id
+                ? {
+                    ...t,
+                    type: 'overdue_urge' as any,
+                    title: `逾期未签：${s.payeeName} ${(s.amount / 10000).toFixed(0)}万元`,
+                    description: `已超过约定签收时间3天，催办${s.urgedCount}次 - 建议电话联系`,
+                    deadlineAt: now.add(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                    priority: 'high'
+                  }
+                : t
+            );
+          } else {
+            // 再检查是否已有未完成的 overdue_urge，有就跳过不再加
+            const alreadyHasOverdue = newTodos.find(
+              (t) => t.relatedId === s.id && t.type === 'overdue_urge' && !t.isDone
+            );
+            if (!alreadyHasOverdue) {
+              newTodos.unshift({
+                id: generateId(),
+                type: 'overdue_urge',
+                relatedId: s.id,
+                title: `逾期未签：${s.payeeName} ${(s.amount / 10000).toFixed(0)}万元`,
+                description: `已超过约定签收时间3天，催办${s.urgedCount}次 - 建议电话联系`,
+                amount: s.amount,
+                createdAt: now.format('YYYY-MM-DD HH:mm:ss'),
+                deadlineAt: now.add(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
+                isDone: false,
+                priority: 'high'
+              });
             }
-          });
-          // 新增逾期催办待办
-          newTodos.unshift({
-            id: generateId(),
-            type: 'overdue_urge',
-            relatedId: s.id,
-            title: `逾期未签：${s.payeeName} ${(s.amount / 10000).toFixed(0)}万元`,
-            description: `已超过约定签收时间3天，催办${s.urgedCount}次 - 建议电话联系`,
-            amount: s.amount,
-            createdAt: now.format('YYYY-MM-DD HH:mm:ss'),
-            deadlineAt: now.add(1, 'day').format('YYYY-MM-DD HH:mm:ss'),
-            isDone: false,
-            priority: 'high'
-          });
+          }
         });
 
         set({ splitRecords: newSplitRecords, todos: newTodos });
