@@ -9,9 +9,12 @@ import { formatAmount, humanizeDate, maskBillNo } from '@/utils/format';
 interface SplitItemProps {
   record: SplitRecord;
   onClick?: () => void;
+  showActions?: boolean;
+  onSign?: () => void;
+  onUrge?: () => void;
 }
 
-const SplitItem: React.FC<SplitItemProps> = ({ record, onClick }) => {
+const SplitItem: React.FC<SplitItemProps> = ({ record, onClick, showActions, onSign, onUrge }) => {
   const handleClick = () => {
     if (onClick) {
       onClick();
@@ -91,6 +94,31 @@ const SplitItem: React.FC<SplitItemProps> = ({ record, onClick }) => {
           )}
         </View>
       </View>
+
+      {showActions && (record.status === 'pending_sign' || record.status === 'overdue') && (
+        <View className={styles.actionRow}>
+          {record.status === 'overdue' && (
+            <View
+              className={classnames(styles.actionBtn, styles.actionBtnWarning)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onUrge && onUrge();
+              }}
+            >
+              <Text>催办</Text>
+            </View>
+          )}
+          <View
+            className={classnames(styles.actionBtn, styles.actionBtnPrimary)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSign && onSign();
+            }}
+          >
+            <Text>确认收款</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };

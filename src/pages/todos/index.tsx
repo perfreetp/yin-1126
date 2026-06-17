@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
-import Taro from '@tarojs/taro';
+import Taro, { useDidShow } from '@tarojs/taro';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import { useBillStore } from '@/store/useBillStore';
@@ -11,7 +11,11 @@ import { TODO_TYPE_LABEL, TodoType } from '@/types';
 type FilterTab = 'all' | TodoType | 'done';
 
 const TodosPage: React.FC = () => {
-  const { todos, splitRecords, approveSplit, urgeSplit, signSplit, rejectSplit } = useBillStore();
+  const { todos, splitRecords, approveSplit, urgeSplit, signSplit, rejectSplit, checkOverdue } = useBillStore();
+
+  useDidShow(() => {
+    checkOverdue();
+  });
 
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
 

@@ -12,7 +12,11 @@ import { formatAmountWan } from '@/utils/format';
 import dayjs from 'dayjs';
 
 const DashboardPage: React.FC = () => {
-  const { bills, todos, splitRecords, getDashboardStats, approveSplit, urgeSplit, signSplit } = useBillStore();
+  const { bills, todos, splitRecords, getDashboardStats, approveSplit, urgeSplit, signSplit, checkOverdue } = useBillStore();
+
+  useDidShow(() => {
+    checkOverdue();
+  });
 
   const stats = getDashboardStats();
 

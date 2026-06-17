@@ -21,7 +21,7 @@ const statusTabs: { key: StatusFilter; label: string }[] = [
 ];
 
 const ReceiptPage: React.FC = () => {
-  const { splitRecords, payees, signSplit } = useBillStore();
+  const { splitRecords, payees, signSplit, urgeSplit } = useBillStore();
 
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [selectedPayee, setSelectedPayee] = useState<string | null>(null);
@@ -153,7 +153,16 @@ const ReceiptPage: React.FC = () => {
           {filteredRecords.length > 0 ? (
             <View className={styles.splitList}>
               {filteredRecords.map((record) => (
-                <SplitItem key={record.id} record={record} />
+                <SplitItem
+                  key={record.id}
+                  record={record}
+                  showActions
+                  onSign={() => handleConfirmReceipt(record.id)}
+                  onUrge={() => {
+                    urgeSplit(record.id);
+                    Taro.showToast({ title: '催办已发送', icon: 'success' });
+                  }}
+                />
               ))}
             </View>
           ) : (

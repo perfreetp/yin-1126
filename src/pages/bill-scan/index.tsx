@@ -241,6 +241,7 @@ const BillScanPage: React.FC = () => {
         <Text>保存票据</Text>
       </View>
     </View>
+    </>
   );
 };
 

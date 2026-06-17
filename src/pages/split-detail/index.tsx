@@ -179,13 +179,30 @@ const SplitDetailPage: React.FC = () => {
               <Text>查看凭证</Text>
             </View>
             <View
-              className={styles.btnPrimary}
+              className={styles.btnSecondary}
               onClick={() => {
                 urgeSplit(split.id);
                 Taro.showToast({ title: '催办已发送', icon: 'success' });
               }}
             >
               <Text>发送催办</Text>
+            </View>
+            <View
+              className={styles.btnPrimary}
+              onClick={() => {
+                Taro.showModal({
+                  title: '确认收款',
+                  content: '确认该笔拆分已完成对方签收？',
+                  success: (res) => {
+                    if (res.confirm) {
+                      signSplit(split.id);
+                      Taro.showToast({ title: '已确认签收', icon: 'success' });
+                    }
+                  }
+                });
+              }}
+            >
+              <Text>确认收款</Text>
             </View>
           </View>
         );
@@ -214,6 +231,7 @@ const SplitDetailPage: React.FC = () => {
   };
 
   return (
+    <>
     <ScrollView scrollY className={styles.page}>
       <View className={classnames(styles.statusHeader, getStatusClass())}>
         <View className={styles.statusBadge}>
@@ -328,6 +346,8 @@ const SplitDetailPage: React.FC = () => {
         </View>
       </View>
     </ScrollView>
+    {renderBottomBar()}
+    </>
   );
 };
 
