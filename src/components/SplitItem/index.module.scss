@@ -1,0 +1,171 @@
+@use '@/styles/variables.scss' as *;
+
+.splitItem {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.92;
+  }
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payeeWrap {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex: 1;
+  min-width: 0;
+}
+
+.catBadge {
+  font-size: $font-size-xs;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  flex-shrink: 0;
+
+  &.catMaterial {
+    background: #E8F3FF;
+    color: $color-primary;
+  }
+  &.catLogistics {
+    background: #FFF7E8;
+    color: $color-warning;
+  }
+  &.catProcessor {
+    background: #E8FFEA;
+    color: $color-success;
+  }
+  &.catOther {
+    background: #F2F3F5;
+    color: $color-text-secondary;
+  }
+}
+
+.payeeName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+  max-width: 320rpx;
+}
+
+.statusTag {
+  font-size: $font-size-xs;
+  padding: 6rpx 16rpx;
+  border-radius: $radius-sm;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+
+  &.statusPending {
+    background: #FFF7E8;
+    color: $color-warning;
+  }
+  &.statusRejected {
+    background: #FFECE8;
+    color: $color-error;
+  }
+  &.statusSign {
+    background: #E8F3FF;
+    color: $color-primary;
+  }
+  &.statusSigned {
+    background: #E8FFEA;
+    color: $color-success;
+  }
+  &.statusOverdue {
+    background: #FFECE8;
+    color: $color-error;
+  }
+}
+
+.amountRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.amountLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.amountValue {
+  font-size: 36rpx;
+  font-weight: $font-weight-bold;
+  color: $color-amount;
+}
+
+.purposeRow {
+  background: $color-bg-section;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-md;
+}
+
+.purposeText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.5;
+}
+
+.billRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $font-size-sm;
+}
+
+.billLabel {
+  color: $color-text-tertiary;
+}
+
+.billValue {
+  color: $color-text-secondary;
+  font-family: monospace;
+}
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-sm;
+  border-top: 1rpx solid $color-divider;
+}
+
+.timeText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.rightMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.urgeText {
+  font-size: $font-size-xs;
+  color: $color-warning;
+  background: $color-warning-bg;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+}
+
+.rejectReason {
+  font-size: $font-size-xs;
+  color: $color-error;
+  @include text-ellipsis;
+  max-width: 300rpx;
+}

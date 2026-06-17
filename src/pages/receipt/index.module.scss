@@ -1,0 +1,147 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.summarySection {
+  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+  margin: $spacing-md $page-padding;
+  border-radius: $radius-lg;
+  padding: $spacing-xl $spacing-lg;
+  color: $color-text-white;
+  box-shadow: 0 8rpx 32rpx rgba($color-primary, 0.25);
+}
+
+.summaryTitle {
+  font-size: $font-size-sm;
+  opacity: 0.85;
+  margin-bottom: $spacing-xs;
+}
+
+.summaryAmount {
+  font-size: 52rpx;
+  font-weight: $font-weight-bold;
+  line-height: 1.2;
+  margin-bottom: $spacing-lg;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.summaryItemValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.summaryItemLabel {
+  font-size: $font-size-xs;
+  opacity: 0.75;
+}
+
+.filterBar {
+  padding: 0 $page-padding $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.filterRow {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+}
+
+.filterSelect {
+  flex: 1;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: 20rpx 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: $shadow-card;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.filterPlaceholder {
+  color: $color-text-tertiary;
+}
+
+.filterValue {
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  @include text-ellipsis;
+  max-width: 300rpx;
+}
+
+.arrowIcon {
+  color: $color-text-tertiary;
+  flex-shrink: 0;
+  margin-left: $spacing-xs;
+}
+
+.statusTabs {
+  display: flex;
+  gap: $spacing-sm;
+  overflow-x: auto;
+
+  @include scroll-x-container;
+}
+
+.statusTab {
+  @include scroll-x-item(auto);
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.04);
+  margin-right: $spacing-sm;
+  white-space: nowrap;
+  transition: all $transition-fast;
+
+  &.active {
+    background: $color-success;
+    color: $color-text-white;
+    font-weight: $font-weight-semibold;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.listSection {
+  padding: $spacing-md $page-spacing;
+}
+
+.paddingPage {
+  padding: 0 $page-padding;
+}
+
+.splitList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}

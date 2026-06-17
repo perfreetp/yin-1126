@@ -1,0 +1,405 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding-bottom: 200rpx;
+}
+
+.sectionCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  margin: $spacing-md $page-padding;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.stepBadge {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-semibold;
+}
+
+.selectBillRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: $color-bg-section;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:active {
+    background: rgba($color-primary, 0.06);
+  }
+
+  &.selected {
+    background: rgba($color-success, 0.08);
+    border: 2rpx solid $color-success;
+  }
+}
+
+.billInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.billAmountRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8rpx;
+}
+
+.billAmount {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-amount;
+}
+
+.remainingBadge {
+  font-size: $font-size-xs;
+  color: $color-success;
+  background: $color-success-bg;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+}
+
+.billMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.selectHint {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.noSelection {
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $color-text-tertiary;
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.noSelectionIcon {
+  font-size: 48rpx;
+}
+
+.noSelectionText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.quickAmounts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
+
+.quickAmountBtn {
+  padding: 16rpx 8rpx;
+  background: $color-bg-section;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  text-align: center;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active, &.active {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+}
+
+.inputField {
+  background: $color-bg-section;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
+
+.inputPrefix {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex-shrink: 0;
+}
+
+.inputValue {
+  flex: 1;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  min-height: 48rpx;
+}
+
+.placeholderValue {
+  color: $color-text-disabled;
+  font-size: $font-size-md;
+  font-weight: $font-weight-normal;
+}
+
+.inputClear {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  background: $color-bg-hover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-tertiary;
+  font-size: $font-size-xs;
+}
+
+.amountHint {
+  margin-top: $spacing-sm;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: flex;
+  justify-content: space-between;
+}
+
+.exceedText {
+  color: $color-error;
+}
+
+.payeeList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.favoritePayees {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.sectionSubtitle {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-sm;
+  padding-left: $spacing-xs;
+  border-left: 4rpx solid $color-primary;
+}
+
+.addPayeeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  padding: $spacing-md;
+  background: $color-bg-section;
+  border-radius: $radius-md;
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+.textAreaField {
+  background: $color-bg-section;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-top: $spacing-md;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 140rpx;
+}
+
+.textAreaValue {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  line-height: 1.6;
+  min-height: 100rpx;
+}
+
+.quickPurposes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
+
+.purposeChip {
+  padding: 12rpx 24rpx;
+  background: $color-bg-section;
+  border-radius: $radius-button;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+
+  &:active {
+    background: $color-primary-bg;
+    color: $color-primary;
+  }
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 120rpx;
+  left: 0;
+  right: 0;
+  padding: $spacing-md $page-padding;
+  background: $color-bg-card;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+  z-index: 100;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.summaryLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.summaryAmount {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-amount;
+}
+
+.submitBtn {
+  width: 100%;
+  height: $button-height-lg;
+  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+  color: $color-text-white;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 4rpx 16rpx rgba($color-primary, 0.3);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.92;
+  }
+
+  &.disabled {
+    background: $color-text-disabled;
+    box-shadow: none;
+  }
+}
+
+.billSelectorSheet {
+  max-height: 70vh;
+}
+
+.sheetHeader {
+  padding: $spacing-lg $page-padding $spacing-md;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.sheetTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sheetClose {
+  color: $color-text-tertiary;
+  font-size: $font-size-lg;
+  padding: $spacing-xs;
+}
+
+.sheetContent {
+  padding: $spacing-md $page-padding;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.sheetBillList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.numPad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-sm;
+  padding: $spacing-md 0;
+}
+
+.numKey {
+  height: 88rpx;
+  background: $color-bg-section;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  transition: all $transition-fast;
+
+  &:active {
+    background: $color-primary-bg;
+    color: $color-primary;
+  }
+}
+
+.numKeyDel {
+  background: $color-error-bg;
+  color: $color-error;
+  font-size: $font-size-lg;
+}
+
+.purposeInput {
+  background: $color-bg-section;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-top: $spacing-md;
+}

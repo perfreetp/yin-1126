@@ -1,0 +1,146 @@
+@use '@/styles/variables.scss' as *;
+
+.payeeItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+  position: relative;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.92;
+  }
+
+  &.selected {
+    border: 2rpx solid $color-primary;
+    background: rgba($color-primary, 0.04);
+  }
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-round;
+  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+  color: $color-text-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  flex-shrink: 0;
+}
+
+.infoWrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.name {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+  flex: 1;
+  max-width: 320rpx;
+}
+
+.categoryTag {
+  font-size: $font-size-xs;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  flex-shrink: 0;
+
+  &.catMaterial {
+    background: #E8F3FF;
+    color: $color-primary;
+  }
+  &.catLogistics {
+    background: #FFF7E8;
+    color: $color-warning;
+  }
+  &.catProcessor {
+    background: #E8FFEA;
+    color: $color-success;
+  }
+  &.catOther {
+    background: #F2F3F5;
+    color: $color-text-secondary;
+  }
+}
+
+.contactRow {
+  display: flex;
+  align-items: center;
+}
+
+.contact {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  @include text-ellipsis;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+}
+
+.totalText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.favorite {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: $color-border;
+  flex-shrink: 0;
+  transition: all $transition-base;
+
+  &.isFavorite {
+    color: #FFB300;
+  }
+
+  &:active {
+    transform: scale(1.2);
+  }
+}
+
+.checkIcon {
+  position: absolute;
+  right: $spacing-lg;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-text-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+}
+
+.selected + .favorite {
+  margin-right: 56rpx;
+}

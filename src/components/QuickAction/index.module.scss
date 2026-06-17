@@ -1,0 +1,66 @@
+@use '@/styles/variables.scss' as *;
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-lg $spacing-md;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+
+  &.cols3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  &.cols5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.actionItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xs;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+}
+
+.iconWrap {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  transition: all $transition-base;
+
+  &.colorPrimary {
+    background: linear-gradient(135deg, #4096FF 0%, #1677FF 100%);
+    color: $color-text-white;
+  }
+  &.colorSuccess {
+    background: linear-gradient(135deg, #34D399 0%, #00B96B 100%);
+    color: $color-text-white;
+  }
+  &.colorWarning {
+    background: linear-gradient(135deg, #FFAA33 0%, #FF7D00 100%);
+    color: $color-text-white;
+  }
+  &.colorError {
+    background: linear-gradient(135deg, #FF6B6B 0%, #F53F3F 100%);
+    color: $color-text-white;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+  text-align: center;
+}

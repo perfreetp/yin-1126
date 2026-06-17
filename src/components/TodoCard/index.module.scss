@@ -1,0 +1,128 @@
+@use '@/styles/variables.scss' as *;
+
+.todoCard {
+  display: flex;
+  gap: $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+  position: relative;
+
+  &.isDone {
+    opacity: 0.6;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.priorityDot {
+  padding-top: 6rpx;
+  flex-shrink: 0;
+}
+
+.dotHigh,
+.dotMedium,
+.dotLow {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: $radius-round;
+}
+.dotHigh {
+  background: $color-error;
+  box-shadow: 0 0 12rpx rgba($color-error, 0.4);
+}
+.dotMedium {
+  background: $color-warning;
+  box-shadow: 0 0 12rpx rgba($color-warning, 0.4);
+}
+.dotLow {
+  background: $color-info;
+}
+
+.contentWrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.typeTag {
+  font-size: $font-size-xs;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  font-weight: $font-weight-medium;
+
+  &.typeApproval {
+    background: #FFF7E8;
+    color: $color-warning;
+  }
+  &.typeSign {
+    background: #E8F3FF;
+    color: $color-primary;
+  }
+  &.typeOverdue {
+    background: #FFECE8;
+    color: $color-error;
+  }
+  &.typeMature {
+    background: #F0F5FF;
+    color: $color-info;
+  }
+}
+
+.deadline {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.title {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: 1.4;
+}
+
+.desc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.5;
+  @include text-ellipsis-multi(2);
+}
+
+.footerRow {
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-xs;
+}
+
+.amount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-amount;
+}
+
+.actionBtn {
+  background: $color-primary;
+  color: $color-text-white;
+  padding: 12rpx 28rpx;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.96);
+  }
+}

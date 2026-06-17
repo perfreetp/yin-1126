@@ -1,0 +1,164 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #EEF4FF 0%, $color-bg-page 40%);
+  padding-bottom: 120rpx;
+}
+
+.header {
+  padding: 32rpx $page-padding 48rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-round;
+  background: linear-gradient(135deg, $color-primary-light 0%, $color-primary 100%);
+  color: $color-text-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: $font-weight-semibold;
+}
+
+.greeting {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.greetingText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.userName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.companyName {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 4rpx;
+}
+
+.todoBadge {
+  position: relative;
+  width: 72rpx;
+  height: 72rpx;
+  background: $color-bg-card;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  box-shadow: $shadow-card;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.badgeDot {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  min-width: 28rpx;
+  height: 28rpx;
+  padding: 0 8rpx;
+  background: $color-error;
+  color: $color-text-white;
+  border-radius: $radius-round;
+  font-size: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-semibold;
+}
+
+.statsSection {
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-lg;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.highlightCard {
+  grid-column: span 2;
+}
+
+.smallStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-lg $page-padding $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.moreLink {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.quickSection {
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-lg;
+}
+
+.billsSection {
+  padding: 0 $page-spacing;
+  margin-bottom: $spacing-lg;
+}
+
+.paddingPage {
+  padding: 0 $page-padding;
+}
+
+.billList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.todoSection {
+  padding: 0 $page-spacing;
+  padding-bottom: $spacing-xl;
+}
+
+.todoList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}

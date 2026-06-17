@@ -1,0 +1,79 @@
+@use '@/styles/variables.scss' as *;
+
+.statCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  &.highlight {
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+    .label, .unit, .value, .trend {
+      color: $color-text-white;
+    }
+    .unit {
+      opacity: 0.8;
+    }
+    .trendUp { color: rgba(255,255,255,0.9); }
+    .trendDown { color: rgba(255,255,255,0.9); }
+  }
+
+  &.colorSuccess {
+    border-left: 6rpx solid $color-success;
+  }
+  &.colorWarning {
+    border-left: 6rpx solid $color-warning;
+  }
+  &.colorError {
+    border-left: 6rpx solid $color-error;
+  }
+}
+
+.label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.unit {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.valueWrap {
+  margin-top: $spacing-xs;
+}
+
+.value {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  line-height: 1.2;
+}
+
+.trend {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 4rpx;
+
+  &.trendUp {
+    color: $color-success;
+  }
+  &.trendDown {
+    color: $color-error;
+  }
+}
